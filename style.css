@@ -27,7 +27,7 @@ button {
    ============================================================================ */
 
 :root {
-	/* Spacing */
+	/* Layout */
 	--side-padding-desktop: 2rem;
 	--side-padding-mobile: 1.5rem;
 	--vertical-space-large: 3rem;
@@ -35,8 +35,6 @@ button {
 	--vertical-space-small: 1rem;
 	--border-radius: 0.25rem;
 	--content-width: 64.75rem;
-
-	/* Navigation */
 	--nav-height: 5.625rem;
 	--menu-button-size: 3.75rem;
 
@@ -55,12 +53,24 @@ button {
 
 body {
 	background-color: var(--background-color);
+	background-size: cover !important;
+	background-attachment: fixed !important;
+	color: var(--text);
 	font-family: var(--body-font);
 	font-size: var(--body-font-size);
-	color: var(--text);
 	line-height: var(--body-line-height);
-	background-size: cover !important;
-  background-attachment: fixed !important;
+}
+
+/* ============================================================================
+   Global Elements
+   ============================================================================ */
+
+a {
+	color: var(--link-color);
+}
+
+a:hover {
+	text-decoration: none;
 }
 
 p,
@@ -73,40 +83,36 @@ ul {
 }
 
 /* ============================================================================
-   Typography
+   Headings
    ============================================================================ */
+
+/* Heading typography */
+h1 { font-size: var(--h1-font-size); }
+h2 { font-size: var(--h2-font-size); }
+h3 { font-size: var(--h3-font-size); }
+h4 { font-size: var(--h4-font-size); }
+h5 { font-size: var(--h5-font-size); }
+h6 { font-size: var(--h6-font-size); }
+
+h1,
+h2,
+h3 {
+	font-weight: normal;
+	text-transform: uppercase;
+	overflow-wrap: anywhere;
+}
 
 h1 {
 	font-family: var(--title-font);
-	font-weight: 300;
-	line-height: var(--title-line-height);
-	text-transform: uppercase;
 	letter-spacing: var(--title-letter-spacing);
-	overflow-wrap: anywhere;
-	font-size: var(--h1-font-size);
+	line-height: var(--title-line-height);
 }
 
 h2,
 h3 {
 	font-family: var(--heading-font);
-	font-weight: normal;
 	line-height: var(--heading-line-height);
-	text-transform: uppercase;
-	overflow-wrap: anywhere;
-}
-
-h2,
-h3,
-h4 {
 	letter-spacing: var(--heading-letter-spacing);
-}
-
-h2 {
-	font-size: var(--h2-font-size);
-}
-
-h3 {
-	font-size: var(--h3-font-size);
 }
 
 h4,
@@ -114,23 +120,16 @@ summary h3,
 .footer-column h2,
 .editor-styles-wrapper summary div { /* editor */
 	font-family: var(--body-font);
-	line-height: 1.5;
-	text-transform: none;
+	line-height: var(--body-line-height);
 	letter-spacing: 0;
 	font-size: var(--h4-font-size);
 	text-transform: uppercase;
-	margin-top: 0.5rem;
 	line-height: 1.1;
 }
 
 h5 {
-	font-size: var(--h5-font-size);
 	font-weight: normal;
 	text-transform: uppercase;
-}
-
-h6 {
-	font-size: var(--h6-font-size);
 }
 
 /* Heading Spacing */
@@ -139,6 +138,16 @@ h2,
 h3 {
 	margin-top: calc(var(--vertical-space-large) - var(--vertical-space-small));
 	scroll-margin-top: calc(var(--nav-height) + var(--vertical-space-large) - var(--vertical-space-small));
+}
+
+h1,
+h2 {
+	margin-bottom: var(--vertical-space-medium);
+}
+
+h3,
+.footer-column h2 {
+	margin-bottom: var(--vertical-space-small);
 }
 
 h2 + h3 {
@@ -153,22 +162,11 @@ button + h3,
 	margin-top: calc(var(--vertical-space-large) - var(--vertical-space-small) - var(--vertical-space-small));
 }
 
-@media (max-width: 1080px) {
-	h1,
-	h2,
-	h3 {
-		scroll-margin-top: calc(var(--vertical-space-large) - var(--vertical-space-small));
-	}
-}
-
-h1,
-h2 {
-	margin-bottom: var(--vertical-space-medium);
-}
-
-h3,
-.footer-column h2 {
-	margin-bottom: var(--vertical-space-small);
+h4,
+summary h3,
+.footer-column h2,
+.editor-styles-wrapper summary div { /* editor */
+	margin-top: 0.5rem;
 }
 
 h4,
@@ -185,15 +183,6 @@ h4:first-child,
 h5:first-child,
 h6:first-child {
 	margin-top: 0;
-}
-
-/* Links */
-a {
-	color: var(--link-color);
-}
-
-a:hover {
-	text-decoration: none;
 }
 
 /* ============================================================================
@@ -253,15 +242,15 @@ label {
    ============================================================================ */
 
 .site-header {
-	background-color: var(--nav-background);
-	width: 100%;
 	position: fixed;
-	z-index: 1000;
+	width: 100%;
 	min-height: var(--nav-height);
+	z-index: 1000;
+	padding: 0 var(--side-padding-desktop);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0 var(--side-padding-desktop);
+	background-color: var(--nav-background);
 }
 
 header a {
@@ -276,27 +265,17 @@ header a:hover {
 /* Site Logo */
 .site-logo img {
 	display: block;
-	height: 5.5rem;
+	height: calc(var(--nav-height) - 2rem);
 }
 
 .site-logo .site-name {
 	font-family: var(--title-font);
 	font-size: 1.75rem;
 	line-height: var(--title-line-height);
+	padding-top: .25rem;
 }
 
-/* Menu Containers */
-.menu-inner {
-	display: flex;
-	flex-direction: column;
-	min-height: var(--nav-height);
-}
-
-main {
-	padding-top: var(--nav-height);
-}
-
-/* Menu Buttons */
+/* Menu Toggle Buttons */
 .open-menu,
 .close-menu {
 	display: none;
@@ -305,7 +284,6 @@ main {
 /* Menu Link Lists */
 .menu-links {
 	list-style: none;
-	flex-grow: 1;
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
@@ -313,25 +291,18 @@ main {
 }
 
 .menu-links a {
-	color: var(--nav-link-color);
 	font-family: var(--heading-font);
 	font-size: 1.375rem;
 	line-height: var(--heading-line-height);
+	letter-spacing: calc(var(--heading-letter-spacing) * 1.75);
 	text-transform: uppercase;
-	padding: 0 0.625rem;
-	border-radius: var(--border-radius);
-	margin-right: 0.875rem;
-	letter-spacing: calc(var(--heading-letter-spacing) * 2);
+	padding: 0 0.75rem;
 }
 
 /* Mobile Navigation */
 @media (max-width: 1080px) {
 	.site-header {
 		padding: 0 var(--side-padding-mobile);
-	}
-
-	.site-logo img {
-		height: 4.5rem;
 	}
 
 	.open-menu,
@@ -440,12 +411,14 @@ main {
 	}
 
 	.menu-inner {
-		min-width: 20rem;
-		background: var(--nav-background);
-		align-items: flex-end;
 		height: fit-content;
 		min-height: 100vh;
+		min-width: 20rem;
 		padding: 0 var(--side-padding-mobile);
+		display: flex;
+		align-items: flex-end;
+		flex-direction: column;
+		background: var(--nav-background);
 	}
 
 	.logged-in .menu-inner {
@@ -551,6 +524,10 @@ main {
 /* ============================================================================
    Page Content
    ============================================================================ */
+
+main {
+	padding-top: var(--nav-height);
+}
 
 .entry-title-outer {
 	display: flex;
