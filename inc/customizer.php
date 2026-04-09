@@ -32,24 +32,6 @@ class Subtle_Customizer {
 	private const ALLOWED_FONT_HOSTS = array( 'fonts.googleapis.com', 'fonts.gstatic.com' );
 
 	/**
-	 * Default color values.
-	 *
-	 * @var array
-	 */
-	public const DEFAULT_COLORS = array(
-		'nav_background_color'  => '#111111',
-		'nav_link_color'        => '#FFFFFF',
-		'nav_link_hover_color'  => '#FFC066',
-		'background_color'      => '#FFFFFF',
-		'text_color'            => '#222222',
-		'link_color'            => '#008888',
-		'title_color'           => '#222222',
-		'accent_color_1'        => '#FFFFFF',
-		'accent_color_2'        => '#FFC066',
-		'accent_color_3'        => '#BDE06F',
-	);
-
-	/**
 	 * Default typography values.
 	 *
 	 * @var array
@@ -71,6 +53,85 @@ class Subtle_Customizer {
 		'h5_font_size'   => '1.75rem',
 		'h6_font_size'   => '1rem',
 	);
+
+	/**
+	 * Theme color settings: label, editor palette slug, CSS variable stem, default hex.
+	 * Single source used for Customizer controls, editor palette, and inline CSS variables.
+	 *
+	 * @return array Setting id => array with keys label, slug, css_var, default.
+	 */
+	private static function get_color_setting_definitions() {
+		static $definitions = null;
+
+		if ( null !== $definitions ) {
+			return $definitions;
+		}
+
+		$definitions = array(
+			'nav_background_color' => array(
+				'label'   => __( 'Nav Background Color', 'subtleearth' ),
+				'slug'    => 'nav-background-color',
+				'css_var' => 'nav-background',
+				'default' => '#111111',
+			),
+			'nav_link_color'       => array(
+				'label'   => __( 'Nav Link Color', 'subtleearth' ),
+				'slug'    => 'nav-link-color',
+				'css_var' => 'nav-link-color',
+				'default' => '#FFFFFF',
+			),
+			'nav_link_hover_color' => array(
+				'label'   => __( 'Nav Link Hover Color', 'subtleearth' ),
+				'slug'    => 'nav-link-hover-color',
+				'css_var' => 'nav-link-hover-color',
+				'default' => '#FFC066',
+			),
+			'background_color'     => array(
+				'label'   => __( 'Background Color', 'subtleearth' ),
+				'slug'    => 'background-color',
+				'css_var' => 'background-color',
+				'default' => '#FFFFFF',
+			),
+			'text_color'           => array(
+				'label'   => __( 'Text Color', 'subtleearth' ),
+				'slug'    => 'text-color',
+				'css_var' => 'text',
+				'default' => '#222222',
+			),
+			'link_color'           => array(
+				'label'   => __( 'Link Color', 'subtleearth' ),
+				'slug'    => 'link-color',
+				'css_var' => 'link-color',
+				'default' => '#008888',
+			),
+			'title_color'          => array(
+				'label'   => __( 'Title Color', 'subtleearth' ),
+				'slug'    => 'title-color',
+				'css_var' => 'title-color',
+				'default' => '#222222',
+			),
+			'accent_color_1'       => array(
+				'label'   => __( 'Accent Color 1', 'subtleearth' ),
+				'slug'    => 'accent-color-1',
+				'css_var' => 'accent-color-1',
+				'default' => '#FFFFFF',
+			),
+			'accent_color_2'       => array(
+				'label'   => __( 'Accent Color 2', 'subtleearth' ),
+				'slug'    => 'accent-color-2',
+				'css_var' => 'accent-color-2',
+				'default' => '#FFC066',
+			),
+			'accent_color_3'       => array(
+				'label'   => __( 'Accent Color 3', 'subtleearth' ),
+				'slug'    => 'accent-color-3',
+				'css_var' => 'accent-color-3',
+				'default' => '#BDE06F',
+			),
+		);
+
+		return $definitions;
+	}
 
 	/**
 	 * Constructor.
@@ -141,25 +202,11 @@ class Subtle_Customizer {
 			)
 		);
 
-		// Color settings.
-		$colors = array(
-			'nav_background_color' => __( 'Nav Background Color', 'subtleearth' ),
-			'nav_link_color'       => __( 'Nav Link Color', 'subtleearth' ),
-			'nav_link_hover_color' => __( 'Nav Link Hover Color', 'subtleearth' ),
-			'background_color'     => __( 'Background Color', 'subtleearth' ),
-			'text_color'           => __( 'Text Color', 'subtleearth' ),
-			'link_color'           => __( 'Link Color', 'subtleearth' ),
-			'title_color'          => __( 'Title Color', 'subtleearth' ),
-			'accent_color_1'       => __( 'Accent Color 1', 'subtleearth' ),
-			'accent_color_2'       => __( 'Accent Color 2', 'subtleearth' ),
-			'accent_color_3'       => __( 'Accent Color 3', 'subtleearth' ),
-		);
-
-		foreach ( $colors as $setting_id => $label ) {
+		foreach ( self::get_color_setting_definitions() as $setting_id => $def ) {
 			$wp_customize->add_setting(
 				$setting_id,
 				array(
-					'default'           => self::DEFAULT_COLORS[ $setting_id ],
+					'default'           => $def['default'],
 					'sanitize_callback' => 'sanitize_hex_color',
 				)
 			);
@@ -169,7 +216,7 @@ class Subtle_Customizer {
 					$wp_customize,
 					$setting_id,
 					array(
-						'label'   => $label,
+						'label'   => $def['label'],
 						'section' => 'subtle_colors',
 					)
 				)
@@ -418,31 +465,18 @@ class Subtle_Customizer {
 	 * Register editor color palette with theme colors from customizer.
 	 */
 	public function register_editor_color_palette() {
-		$color_map = array(
-			'nav_background_color' => array( 'name' => __( 'Nav Background Color', 'subtleearth' ), 'slug' => 'nav-background-color' ),
-			'nav_link_color'       => array( 'name' => __( 'Nav Link Color', 'subtleearth' ), 'slug' => 'nav-link-color' ),
-			'nav_link_hover_color' => array( 'name' => __( 'Nav Link Hover Color', 'subtleearth' ), 'slug' => 'nav-link-hover-color' ),
-			'background_color'     => array( 'name' => __( 'Background Color', 'subtleearth' ), 'slug' => 'background-color' ),
-			'text_color'           => array( 'name' => __( 'Text Color', 'subtleearth' ), 'slug' => 'text-color' ),
-			'link_color'           => array( 'name' => __( 'Link Color', 'subtleearth' ), 'slug' => 'link-color' ),
-			'title_color'          => array( 'name' => __( 'Title Color', 'subtleearth' ), 'slug' => 'title-color' ),
-			'accent_color_1'       => array( 'name' => __( 'Accent Color 1', 'subtleearth' ), 'slug' => 'accent-color-1' ),
-			'accent_color_2'       => array( 'name' => __( 'Accent Color 2', 'subtleearth' ), 'slug' => 'accent-color-2' ),
-			'accent_color_3'       => array( 'name' => __( 'Accent Color 3', 'subtleearth' ), 'slug' => 'accent-color-3' ),
-		);
-
 		$editor_color_palette = array();
 		$seen_hex             = array();
-		foreach ( $color_map as $setting_id => $args ) {
-			$color = get_theme_mod( $setting_id, self::DEFAULT_COLORS[ $setting_id ] );
+		foreach ( self::get_color_setting_definitions() as $setting_id => $def ) {
+			$color = get_theme_mod( $setting_id, $def['default'] );
 			$key   = strtolower( $color );
 			if ( isset( $seen_hex[ $key ] ) ) {
 				continue;
 			}
 			$seen_hex[ $key ] = true;
 			$editor_color_palette[] = array(
-				'name'  => $args['name'],
-				'slug'  => $args['slug'],
+				'name'  => $def['label'],
+				'slug'  => $def['slug'],
 				'color' => $color,
 			);
 		}
@@ -464,36 +498,11 @@ class Subtle_Customizer {
 			$css .= '@import url("' . esc_url_raw( $fonts_url ) . '");';
 		}
 
-		// Cache theme mod values to avoid repeated calls.
-		$color_settings = array(
-			'nav_background_color' => get_theme_mod( 'nav_background_color', self::DEFAULT_COLORS['nav_background_color'] ),
-			'nav_link_color'       => get_theme_mod( 'nav_link_color', self::DEFAULT_COLORS['nav_link_color'] ),
-			'nav_link_hover_color' => get_theme_mod( 'nav_link_hover_color', self::DEFAULT_COLORS['nav_link_hover_color'] ),
-			'background_color'     => get_theme_mod( 'background_color', self::DEFAULT_COLORS['background_color'] ),
-			'text_color'           => get_theme_mod( 'text_color', self::DEFAULT_COLORS['text_color'] ),
-			'link_color'           => get_theme_mod( 'link_color', self::DEFAULT_COLORS['link_color'] ),
-			'title_color'          => get_theme_mod( 'title_color', self::DEFAULT_COLORS['title_color'] ),
-			'accent_color_1'       => get_theme_mod( 'accent_color_1', self::DEFAULT_COLORS['accent_color_1'] ),
-			'accent_color_2'       => get_theme_mod( 'accent_color_2', self::DEFAULT_COLORS['accent_color_2'] ),
-			'accent_color_3'       => get_theme_mod( 'accent_color_3', self::DEFAULT_COLORS['accent_color_3'] ),
-		);
-
-		// Build color CSS variables.
+		// Theme colors: read each theme mod once and build CSS variables.
 		$color_variables = array();
-		$color_map = array(
-			'nav_background_color' => 'nav-background',
-			'nav_link_color'       => 'nav-link-color',
-			'nav_link_hover_color' => 'nav-link-hover-color',
-			'background_color'     => 'background-color',
-			'text_color'           => 'text',
-			'link_color'           => 'link-color',
-			'title_color'          => 'title-color',
-			'accent_color_1'       => 'accent-color-1',
-			'accent_color_2'       => 'accent-color-2',
-			'accent_color_3'       => 'accent-color-3',
-		);
-		foreach ( $color_map as $setting_id => $css_var ) {
-			$color = $color_settings[ $setting_id ];
+		foreach ( self::get_color_setting_definitions() as $setting_id => $def ) {
+			$color   = get_theme_mod( $setting_id, $def['default'] );
+			$css_var = $def['css_var'];
 			$color_variables[ $css_var ] = $color;
 			$color_variables[ $css_var . '-filter' ] = Subtle_Color_Converter::hex_to_css_filter( $color );
 			$color_variables[ $css_var . '-rgb' ] = implode( ',', Subtle_Color_Converter::hex_to_rgb( $color ) );

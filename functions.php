@@ -186,21 +186,21 @@ add_filter( 'upload_mimes', 'subtle_allow_pdf_uploads' );
  * @param string|false $real_mime           The actual mime type or false if the type cannot be determined.
  * @return array Modified file data array.
  */
-	function subtle_validate_pdf_upload( $wp_check_filetype_and_ext, $file, $filename, $mimes, $real_mime ) {
-		if ( ! preg_match( '/\.pdf$/i', $filename ) ) {
-			return $wp_check_filetype_and_ext;
-		}
-
-		if ( $real_mime && in_array( $real_mime, ALLOWED_PDF_MIMES, true ) ) {
-			$wp_check_filetype_and_ext['ext']  = 'pdf';
-			$wp_check_filetype_and_ext['type'] = 'application/pdf';
-		} else {
-			$wp_check_filetype_and_ext['ext']  = false;
-			$wp_check_filetype_and_ext['type'] = false;
-		}
-
+function subtle_validate_pdf_upload( $wp_check_filetype_and_ext, $file, $filename, $mimes, $real_mime ) {
+	if ( ! preg_match( '/\.pdf$/i', $filename ) ) {
 		return $wp_check_filetype_and_ext;
 	}
+
+	if ( $real_mime && in_array( $real_mime, ALLOWED_PDF_MIMES, true ) ) {
+		$wp_check_filetype_and_ext['ext']  = 'pdf';
+		$wp_check_filetype_and_ext['type'] = 'application/pdf';
+	} else {
+		$wp_check_filetype_and_ext['ext']  = false;
+		$wp_check_filetype_and_ext['type'] = false;
+	}
+
+	return $wp_check_filetype_and_ext;
+}
 add_filter( 'wp_check_filetype_and_ext', 'subtle_validate_pdf_upload', 10, 5 );
 
 /**
@@ -225,13 +225,13 @@ add_action( 'init', 'subtle_disable_image_resizing' );
  * @param string $src The source URL.
  * @return string Modified source URL.
  */
-	function subtle_remove_version_scripts_styles( $src ) {
-		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
-			return $src;
-		}
-
-		return strpos( $src, 'ver=' ) ? remove_query_arg( 'ver', $src ) : $src;
+function subtle_remove_version_scripts_styles( $src ) {
+	if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+		return $src;
 	}
+
+	return strpos( $src, 'ver=' ) ? remove_query_arg( 'ver', $src ) : $src;
+}
 add_filter( 'style_loader_src', 'subtle_remove_version_scripts_styles', 9999 );
 add_filter( 'script_loader_src', 'subtle_remove_version_scripts_styles', 9999 );
 

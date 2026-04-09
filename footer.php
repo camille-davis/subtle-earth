@@ -7,25 +7,17 @@
 
 ?>
 <footer class="site-footer">
-	<?php if ( is_active_sidebar( 'footer-column-1' ) || is_active_sidebar( 'footer-column-2' ) || is_active_sidebar( 'footer-column-3' ) ) : ?>
+	<?php
+	$footer_column_sidebars = array( 'footer-column-1', 'footer-column-2', 'footer-column-3' );
+	$active_footer_columns  = array_values( array_filter( $footer_column_sidebars, 'is_active_sidebar' ) );
+	?>
+	<?php if ( $active_footer_columns ) : ?>
 		<div class="footer-columns">
-			<?php if ( is_active_sidebar( 'footer-column-1' ) ) : ?>
-				<div class="footer-column footer-column-1">
-					<?php dynamic_sidebar( 'footer-column-1' ); ?>
+			<?php foreach ( $active_footer_columns as $sidebar_id ) : ?>
+				<div class="footer-column <?php echo esc_attr( $sidebar_id ); ?>">
+					<?php dynamic_sidebar( $sidebar_id ); ?>
 				</div>
-			<?php endif; ?>
-
-			<?php if ( is_active_sidebar( 'footer-column-2' ) ) : ?>
-				<div class="footer-column footer-column-2">
-					<?php dynamic_sidebar( 'footer-column-2' ); ?>
-				</div>
-			<?php endif; ?>
-
-			<?php if ( is_active_sidebar( 'footer-column-3' ) ) : ?>
-				<div class="footer-column footer-column-3">
-					<?php dynamic_sidebar( 'footer-column-3' ); ?>
-				</div>
-			<?php endif; ?>
+			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>
 

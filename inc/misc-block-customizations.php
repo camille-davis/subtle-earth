@@ -54,7 +54,7 @@ class Subtle_Blocks {
 	 * @return void
 	 */
 	public function enqueue_block_editor_assets() {
-		$theme_version = subtle_get_theme_version();
+		$theme_version     = subtle_get_theme_version();
 		$block_editor_deps = array(
 			'wp-blocks',
 			'wp-block-editor',
@@ -64,38 +64,49 @@ class Subtle_Blocks {
 			'wp-hooks',
 		);
 
-		$block_scripts = array(
-			'subtle-group-block-fullwidth'      => 'group-block-fullwidth.js',
-			'subtle-image-block-options'         => 'image-block-options.js',
-			'subtle-columns-block-columns-per-row' => 'columns-block-columns-per-row.js',
-			'subtle-cover-block-link'           => 'cover-block-link.js',
+		$editor_scripts = array(
+			array(
+				'handle' => 'subtle-group-block-fullwidth',
+				'file'   => 'group-block-fullwidth.js',
+				'deps'   => $block_editor_deps,
+			),
+			array(
+				'handle' => 'subtle-image-block-options',
+				'file'   => 'image-block-options.js',
+				'deps'   => $block_editor_deps,
+			),
+			array(
+				'handle' => 'subtle-columns-block-columns-per-row',
+				'file'   => 'columns-block-columns-per-row.js',
+				'deps'   => $block_editor_deps,
+			),
+			array(
+				'handle' => 'subtle-cover-block-link',
+				'file'   => 'cover-block-link.js',
+				'deps'   => $block_editor_deps,
+			),
+			array(
+				'handle' => 'subtle-dimensions-panel-title',
+				'file'   => 'dimensions-panel-title.js',
+				'deps'   => array( 'wp-i18n' ),
+			),
+			array(
+				'handle' => 'subtle-add-editor-classes',
+				'file'   => 'add-editor-classes.js',
+				'deps'   => array(),
+			),
 		);
 
-		foreach ( $block_scripts as $handle => $file ) {
+		$script_base = get_template_directory_uri() . '/js/';
+		foreach ( $editor_scripts as $spec ) {
 			wp_enqueue_script(
-				$handle,
-				get_template_directory_uri() . '/js/' . $file,
-				$block_editor_deps,
+				$spec['handle'],
+				$script_base . $spec['file'],
+				$spec['deps'],
 				$theme_version,
 				true
 			);
 		}
-
-		wp_enqueue_script(
-			'subtle-dimensions-panel-title',
-			get_template_directory_uri() . '/js/dimensions-panel-title.js',
-			array( 'wp-i18n' ),
-			$theme_version,
-			true
-		);
-
-		wp_enqueue_script(
-			'subtle-add-editor-classes',
-			get_template_directory_uri() . '/js/add-editor-classes.js',
-			array(),
-			$theme_version,
-			true
-		);
 	}
 
 	/**

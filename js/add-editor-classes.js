@@ -9,7 +9,7 @@
     }
 
 		const observer = new MutationObserver(function () {
-      widgetAreas = document.querySelectorAll('[data-widget-area-id]');
+      const widgetAreas = document.querySelectorAll('[data-widget-area-id]');
       if (widgetAreas.length === 0) {
         return;
       }
@@ -68,7 +68,9 @@
 		observer.observe(blockEditor, { childList: true, subtree: true });
 	}
 
-	document.addEventListener('DOMContentLoaded', addEditorClasses);
-	document.addEventListener('DOMContentLoaded', addFooterClasses);
+	document.addEventListener('DOMContentLoaded', function () {
+		addEditorClasses();
+		addFooterClasses();
+	});
 })();
 
