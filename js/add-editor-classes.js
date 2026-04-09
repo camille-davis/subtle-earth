@@ -53,16 +53,6 @@
 
       rootContainer.classList.add('entry-content');
 
-      if (
-        typeof subtleEditorCustomBackground !== 'undefined' &&
-        subtleEditorCustomBackground.shouldAddClass
-      ) {
-        const stylesWrapper = iframe.contentDocument.querySelector('.editor-styles-wrapper');
-        if (stylesWrapper) {
-          stylesWrapper.classList.add('custom-background');
-        }
-      }
-
       observer.disconnect();
 		});
 		observer.observe(blockEditor, { childList: true, subtree: true });

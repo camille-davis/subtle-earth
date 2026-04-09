@@ -538,13 +538,10 @@ main {
 
 .entry-title {
 	color: var(--title-color);
+	filter: drop-shadow(0 0 6rem var(--title-drop-shadow-color));
 	margin-bottom: 0;
 	width: var(--content-width);
 	max-width: 100%;
-}
-
-.custom-background .entry-title {
-	filter: drop-shadow(0 0 6rem rgba(0,0,31,1));
 }
 
 h1.has-background,
@@ -564,14 +561,11 @@ h6.has-background {
 }
 
 .editor-visual-editor__post-title-wrapper h1 { /* editor */
+	margin-bottom: 0;
 	width: var(--content-width);
 	max-width: 100%;
 	color: var(--title-color);
-}
-
-.custom-background .editor-visual-editor__post-title-wrapper h1 { /* editor */
-	filter: drop-shadow(0 0 6rem rgba(0,0,31,1));
-	margin-bottom: 0;
+	filter: drop-shadow(0 0 6rem var(--title-drop-shadow-color));
 }
 
 .entry-content {

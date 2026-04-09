@@ -58,7 +58,7 @@ class Subtle_Customizer {
 	 * Theme color settings: label, editor palette slug, CSS variable stem, default hex.
 	 * Single source used for Customizer controls, editor palette, and inline CSS variables.
 	 *
-	 * @return array Setting id => array with keys label, slug, css_var, default.
+	 * @return array Setting id => array with keys label, slug, css_var, default; optional allow_empty omits filter/rgb and palette.
 	 */
 	private static function get_color_setting_definitions() {
 		static $definitions = null;
@@ -110,6 +110,13 @@ class Subtle_Customizer {
 				'css_var' => 'title-color',
 				'default' => '#222222',
 			),
+			'title_drop_shadow_color' => array(
+				'label'       => __( 'Title Drop Shadow Color', 'subtleearth' ),
+				'slug'        => 'title-drop-shadow-color',
+				'css_var'     => 'title-drop-shadow-color',
+				'default'     => '',
+				'allow_empty' => true,
+			),
 			'accent_color_1'       => array(
 				'label'   => __( 'Accent Color 1', 'subtleearth' ),
 				'slug'    => 'accent-color-1',
@@ -143,37 +150,6 @@ class Subtle_Customizer {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_inline_css' ), 20 );
 		add_action( 'after_setup_theme', array( $this, 'register_editor_color_palette' ) );
 		add_filter( 'block_editor_settings_all', array( $this, 'add_editor_inline_css' ), 10, 1 );
-		add_action( 'enqueue_block_editor_assets', array( $this, 'localize_editor_custom_background_class' ), 20 );
-	}
-
-	/**
-	 * Pass whether to mirror body.custom-background on .editor-styles-wrapper (same condition as body_class).
-	 *
-	 * @return void
-	 */
-	public function localize_editor_custom_background_class() {
-		wp_localize_script(
-			'subtle-add-editor-classes',
-			'subtleEditorCustomBackground',
-			array(
-				'shouldAddClass' => self::should_add_editor_custom_background_class(),
-			)
-		);
-	}
-
-	/**
-	 * Whether the front end would add the custom-background body class (see wp-includes/post-template.php).
-	 *
-	 * @return bool
-	 */
-	private static function should_add_editor_custom_background_class() {
-		if ( ! current_theme_supports( 'custom-background' ) ) {
-			return false;
-		}
-
-		$default_color = get_theme_support( 'custom-background', 'default-color' );
-
-		return get_background_color() !== $default_color || (bool) get_background_image();
 	}
 
 	/**
@@ -203,11 +179,15 @@ class Subtle_Customizer {
 		);
 
 		foreach ( self::get_color_setting_definitions() as $setting_id => $def ) {
+			$sanitize = ! empty( $def['allow_empty'] )
+				? array( $this, 'sanitize_optional_hex_color' )
+				: 'sanitize_hex_color';
+
 			$wp_customize->add_setting(
 				$setting_id,
 				array(
 					'default'           => $def['default'],
-					'sanitize_callback' => 'sanitize_hex_color',
+					'sanitize_callback' => $sanitize,
 				)
 			);
 
@@ -222,6 +202,20 @@ class Subtle_Customizer {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Sanitize optional hex color; empty string means no color (cleared control).
+	 *
+	 * @param string $color Submitted value.
+	 * @return string Sanitized hex or empty string.
+	 */
+	public function sanitize_optional_hex_color( $color ) {
+		if ( '' === $color || null === $color ) {
+			return '';
+		}
+
+		return sanitize_hex_color( $color );
 	}
 
 	/**
@@ -468,6 +462,10 @@ class Subtle_Customizer {
 		$editor_color_palette = array();
 		$seen_hex             = array();
 		foreach ( self::get_color_setting_definitions() as $setting_id => $def ) {
+			if ( ! empty( $def['allow_empty'] ) ) {
+				continue;
+			}
+
 			$color = get_theme_mod( $setting_id, $def['default'] );
 			$key   = strtolower( $color );
 			if ( isset( $seen_hex[ $key ] ) ) {
@@ -503,6 +501,12 @@ class Subtle_Customizer {
 		foreach ( self::get_color_setting_definitions() as $setting_id => $def ) {
 			$color   = get_theme_mod( $setting_id, $def['default'] );
 			$css_var = $def['css_var'];
+
+			if ( ! empty( $def['allow_empty'] ) ) {
+				$color_variables[ $css_var ] = $color ? $color : 'transparent';
+				continue;
+			}
+
 			$color_variables[ $css_var ] = $color;
 			$color_variables[ $css_var . '-filter' ] = Subtle_Color_Converter::hex_to_css_filter( $color );
 			$color_variables[ $css_var . '-rgb' ] = implode( ',', Subtle_Color_Converter::hex_to_rgb( $color ) );
