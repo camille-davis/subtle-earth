@@ -96,7 +96,8 @@ h6 { font-size: var(--h6-font-size); }
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
 	font-weight: normal;
 	text-transform: uppercase;
 	overflow-wrap: anywhere;
@@ -120,16 +121,27 @@ summary h3,
 .footer-column h2,
 .editor-styles-wrapper summary div { /* editor */
 	font-family: var(--body-font);
-	line-height: var(--body-line-height);
 	letter-spacing: 0;
 	font-size: var(--h4-font-size);
 	text-transform: uppercase;
-	line-height: 1.1;
 }
 
 h5 {
 	font-weight: normal;
-	text-transform: uppercase;
+}
+
+@media (max-width: 840px) {
+	h1 { font-size: calc(var(--h1-font-size) * .625); }
+	h2 { font-size: calc(var(--h2-font-size) * .75); }
+	h3 { font-size: calc(var(--h3-font-size) * .875); }
+
+}
+
+@media (max-width: 420px) {
+	h1 { font-size: calc(var(--h1-font-size) * .5); }
+	h2 { font-size: calc(var(--h2-font-size) * .625); }
+	h3 { font-size: calc(var(--h3-font-size) * .75); }
+	h4 { font-size: calc(var(--h4-font-size) * .875); }
 }
 
 /* Heading Spacing */
@@ -246,7 +258,7 @@ label {
 	width: 100%;
 	min-height: var(--nav-height);
 	z-index: 1000;
-	padding: 0 var(--side-padding-desktop);
+	padding: .25rem var(--side-padding-desktop) 0;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -272,7 +284,6 @@ header a:hover {
 	font-family: var(--title-font);
 	font-size: 1.75rem;
 	line-height: var(--title-line-height);
-	padding-top: .25rem;
 }
 
 /* Menu Toggle Buttons */
@@ -504,7 +515,7 @@ header a:hover {
 }
 
 .footer-bottom {
-	padding: 0.75rem var(--side-padding-desktop);
+	padding: var(--vertical-space-medium) var(--side-padding-desktop) calc(var(--vertical-space-medium) - var(--vertical-space-small));
 	background-color: var(--background-color);
 }
 
