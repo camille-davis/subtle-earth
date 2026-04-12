@@ -6,7 +6,6 @@
  * - Add is-fullwidth-image and is-fullheight-image toggles to image block
  * - Add columns per row controls to columns block
  * - Add link URL option to cover block
- * - Change 'Dimensions' panel title to 'Spacing'
  *
  * @package Subtle
  */
@@ -84,11 +83,6 @@ class Subtle_Blocks {
 				'handle' => 'subtle-cover-block-link',
 				'file'   => 'cover-block-link.js',
 				'deps'   => $block_editor_deps,
-			),
-			array(
-				'handle' => 'subtle-dimensions-panel-title',
-				'file'   => 'dimensions-panel-title.js',
-				'deps'   => array( 'wp-i18n' ),
 			),
 			array(
 				'handle' => 'subtle-add-editor-classes',
